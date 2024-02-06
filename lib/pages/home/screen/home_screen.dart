@@ -44,6 +44,7 @@ class BodyWidget extends StatelessWidget {
       itemCount: fixtureList?.length,
       itemBuilder: (context, index) {
         var groupedFixture = fixtureList?[index];
+        count = 0;
         return Column(
           children: [
             Container(
@@ -114,7 +115,14 @@ class BodyWidget extends StatelessWidget {
                               padding: const EdgeInsets.only(left: 2.0),
                               child: getStatusToMatch(item?.fixture),
                             ),
-                            Text(shortTeamName(item?.teams?.home?.name)),
+                            Text(
+                              shortTeamName(item?.teams?.home?.name),
+                              style: TextStyle(
+                                fontWeight: item?.teams?.home?.winner ?? false
+                                    ? FontWeight.w900
+                                    : FontWeight.w500,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -129,7 +137,14 @@ class BodyWidget extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(shortTeamName(item?.teams?.away?.name)),
+                            Text(
+                              shortTeamName(item?.teams?.away?.name),
+                              style: TextStyle(
+                                fontWeight: item?.teams?.away?.winner ?? false
+                                    ? FontWeight.w900
+                                    : FontWeight.w500,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -148,14 +163,21 @@ class BodyWidget extends StatelessWidget {
     var scoreTextStyle = const TextStyle(
       color: Colors.red,
       fontWeight: FontWeight.w600,
+      fontSize: 14,
     );
     var startedTextStyle = const TextStyle(
       fontWeight: FontWeight.w600,
+      fontSize: 14,
+    );
+    var notStartedTextStyle = const TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 12,
     );
     switch (fixture?.status?.short) {
       case "NS": //not started
         return Text(
           '${fixture?.date?.hour.toString().padLeft(2, '0')}:${fixture?.date?.minute.toString().padLeft(2, '0')}',
+          style: notStartedTextStyle,
         );
       case "FT": //match finished
         return Text(
@@ -246,7 +268,7 @@ class BodyWidget extends StatelessWidget {
         root?.fixture?.status?.elapsed == null) {
       return RichText(
         text: const TextSpan(
-          text: 'v ',
+          text: 'v',
           style: TextStyle(
             color: Colors.black,
           ),
