@@ -7,17 +7,16 @@ import 'package:football_app/core/service/general_providers.dart';
 import 'package:football_app/pages/home/models/fixture_model.dart';
 import 'package:football_app/pages/home/models/grouped_fixture_model.dart';
 
-final fixtureProvider = Provider<FixtureService>((ref) {
-  return FixtureService(dio: ref.read(dioProvider));
+final leagueProvider = Provider<LeagueService>((ref) {
+  return LeagueService(dio: ref.read(dioProvider));
 });
 
-class FixtureService extends BaseService {
-  FixtureService({required super.dio});
+class LeagueService extends BaseService {
+  LeagueService({required super.dio});
 
   Future<List<GroupedFixtureModel>> getFixture() async {
     List<FixtureRootModel> fixtureList = [];
     List<GroupedFixtureModel> groupedFixtureList = [];
-    List<GroupedFixtureModel> nonGroupedFixtureList = [];
     try {
       var data = await getAll("/fixtures?season=2023&date=2024-02-06");
       fixtureList = List<FixtureRootModel>.from(
@@ -49,21 +48,11 @@ class FixtureService extends BaseService {
               flag: fixtures.first.league?.flag,
             ),
           );
-        } else {
-          nonGroupedFixtureList.add(
-            GroupedFixtureModel(
-              league: leagueId,
-              fixtureList: fixtures,
-              name: fixtures.first.league?.name,
-              flag: fixtures.first.league?.flag,
-            ),
-          );
         }
       });
     } catch (e) {
       log(e.toString());
     }
-    groupedFixtureList.addAll(nonGroupedFixtureList);
     return groupedFixtureList;
   }
 }
